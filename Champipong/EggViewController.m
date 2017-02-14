@@ -56,6 +56,7 @@
         SKView *skView = [[SKView alloc] initWithFrame:size];
         skView.showsFPS = YES;
         skView.showsNodeCount = YES;
+        //skView.showsPhysics = YES;
         
         skView.ignoresSiblingOrder = YES;
         

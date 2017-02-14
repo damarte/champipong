@@ -16,6 +16,9 @@
 		053769531DBF43EF00415FD8 /* EggScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 0537694E1DBF43EF00415FD8 /* EggScene.m */; };
 		053769541DBF43EF00415FD8 /* EggScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 0537694F1DBF43EF00415FD8 /* EggScene.sks */; };
 		053769551DBF43EF00415FD8 /* EggViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 053769511DBF43EF00415FD8 /* EggViewController.m */; };
+		054BD0A21DC269AD006EAEF0 /* PrawnNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 054BD0A11DC269AD006EAEF0 /* PrawnNode.m */; };
+		055450361DBFC05C003B317A /* BreadNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 055450351DBFC05C003B317A /* BreadNode.m */; };
+		055450391DBFE69B003B317A /* MushroomNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 055450381DBFE69B003B317A /* MushroomNode.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +36,13 @@
 		0537694F1DBF43EF00415FD8 /* EggScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EggScene.sks; sourceTree = "<group>"; };
 		053769501DBF43EF00415FD8 /* EggViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EggViewController.h; sourceTree = "<group>"; };
 		053769511DBF43EF00415FD8 /* EggViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EggViewController.m; sourceTree = "<group>"; };
+		054BD0A01DC269AD006EAEF0 /* PrawnNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrawnNode.h; sourceTree = "<group>"; };
+		054BD0A11DC269AD006EAEF0 /* PrawnNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrawnNode.m; sourceTree = "<group>"; };
+		055450341DBFC05C003B317A /* BreadNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BreadNode.h; sourceTree = "<group>"; };
+		055450351DBFC05C003B317A /* BreadNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BreadNode.m; sourceTree = "<group>"; };
+		055450371DBFE69B003B317A /* MushroomNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MushroomNode.h; sourceTree = "<group>"; };
+		055450381DBFE69B003B317A /* MushroomNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MushroomNode.m; sourceTree = "<group>"; };
+		05B846CE1DC12A400044EE11 /* CollisionMask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollisionMask.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +79,12 @@
 				0537694D1DBF43EF00415FD8 /* EggScene.h */,
 				0537694E1DBF43EF00415FD8 /* EggScene.m */,
 				0537694F1DBF43EF00415FD8 /* EggScene.sks */,
+				055450341DBFC05C003B317A /* BreadNode.h */,
+				055450351DBFC05C003B317A /* BreadNode.m */,
+				055450371DBFE69B003B317A /* MushroomNode.h */,
+				055450381DBFE69B003B317A /* MushroomNode.m */,
+				054BD0A01DC269AD006EAEF0 /* PrawnNode.h */,
+				054BD0A11DC269AD006EAEF0 /* PrawnNode.m */,
 				053769501DBF43EF00415FD8 /* EggViewController.h */,
 				053769511DBF43EF00415FD8 /* EggViewController.m */,
 				053769381DBF43B200415FD8 /* AppDelegate.h */,
@@ -78,6 +94,7 @@
 				053769431DBF43B200415FD8 /* LaunchScreen.storyboard */,
 				053769461DBF43B200415FD8 /* Info.plist */,
 				053769351DBF43B200415FD8 /* Supporting Files */,
+				05B846CE1DC12A400044EE11 /* CollisionMask.h */,
 			);
 			path = Champipong;
 			sourceTree = "<group>";
@@ -116,11 +133,12 @@
 		0537692A1DBF43B200415FD8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = David;
 				TargetAttributes = {
 					053769311DBF43B200415FD8 = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = AG9Q7525WJ;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -163,7 +181,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				054BD0A21DC269AD006EAEF0 /* PrawnNode.m in Sources */,
 				053769551DBF43EF00415FD8 /* EggViewController.m in Sources */,
+				055450391DBFE69B003B317A /* MushroomNode.m in Sources */,
+				055450361DBFC05C003B317A /* BreadNode.m in Sources */,
 				0537693A1DBF43B200415FD8 /* AppDelegate.m in Sources */,
 				053769371DBF43B200415FD8 /* main.m in Sources */,
 				053769531DBF43EF00415FD8 /* EggScene.m in Sources */,
@@ -210,6 +231,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -257,6 +279,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -284,6 +307,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = AG9Q7525WJ;
 				INFOPLIST_FILE = Champipong/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = dmartinez.Champipong;
@@ -295,6 +320,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = AG9Q7525WJ;
 				INFOPLIST_FILE = Champipong/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = dmartinez.Champipong;

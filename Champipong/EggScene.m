@@ -7,62 +7,37 @@
 //
 
 #import "EggScene.h"
+#import "BreadNode.h"
+#import "MushroomNode.h"
+#import "PrawnNode.h"
 
 static NSString * const kBreadNodeName = @"movable";
 
-typedef NS_OPTIONS(NSUInteger, CollisionCategory)
-{
-    CollisionCategoryChampi = 0,
-    CollisionCategoryPlayerBread = 1 << 0,
-    CollisionCategoryGamba = 1 << 1,
-};
 
 @implementation EggScene{
     BOOL moving;
+    NSInteger updateCalled;
 }
 
 -(void)createScene {
     //Inicializacion
-    self.backgroundColor = [SKColor darkGrayColor];
+    self.backgroundColor = [SKColor whiteColor];
+    self.physicsWorld.contactDelegate = self;
     self.physicsWorld.gravity = CGVectorMake(0, -2);
     
     //Jugador
-    self.bread = [[SKSpriteNode alloc] initWithImageNamed:@"bread"];
-    self.bread.size = CGSizeMake(70, 104);
-    self.bread.position = CGPointMake(self.size.width/2, (self.bread.size.height/2)+30);
-    
-    CGFloat offsetX = self.bread.frame.size.width * self.bread.anchorPoint.x;
-    CGFloat offsetY = self.bread.frame.size.height * self.bread.anchorPoint.y;
-    
-    CGMutablePathRef path = CGPathCreateMutable();
-    
-    CGPathMoveToPoint(path, NULL, 35 - offsetX, 103 - offsetY);
-    CGPathAddLineToPoint(path, NULL, 31 - offsetX, 24 - offsetY);
-    CGPathAddLineToPoint(path, NULL, 2 - offsetX, 22 - offsetY);
-    CGPathAddLineToPoint(path, NULL, 1 - offsetX, 1 - offsetY);
-    CGPathAddLineToPoint(path, NULL, 68 - offsetX, 1 - offsetY);
-    CGPathAddLineToPoint(path, NULL, 68 - offsetX, 22 - offsetY);
-    CGPathAddLineToPoint(path, NULL, 40 - offsetX, 24 - offsetY);
-    
-    CGPathCloseSubpath(path);
-    
-    self.bread.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:path];
-    self.bread.physicsBody.categoryBitMask = CollisionCategoryPlayerBread;
-    self.bread.physicsBody.collisionBitMask = CollisionCategoryChampi;
-    self.bread.physicsBody.contactTestBitMask = CollisionCategoryChampi;
-    self.bread.physicsBody.affectedByGravity = NO;
-    self.bread.physicsBody.dynamic = YES;
-    self.bread.physicsBody.usesPreciseCollisionDetection = YES;
-    self.bread.zPosition = 10;
+    self.bread = [[BreadNode alloc] init];
+    self.bread.position = CGPointMake(self.size.width/2, (self.bread.size.height/2)+20);
     
     [self addChild:self.bread];
     
     moving = NO;
+    updateCalled = 0;
     
     //Boton de pausa
     self.pauseButton = [self getLabelWithText:@"⏸" andFontSize:40 andFontColor:[SKColor whiteColor] andFont:@"" andBackgroundColor:[SKColor clearColor] andSize:CGSizeMake(40, 40) andName:@"pauseButton"];
     self.pauseButton.position = CGPointMake(self.pauseButton.frame.size.width/2 + 5, self.size.height - self.pauseButton.frame.size.height/2 - 5);
-    self.pauseButton.zPosition = 99;
+    self.pauseButton.zPosition = 999;
     
     [self addChild:self.pauseButton];
     
@@ -70,7 +45,7 @@ typedef NS_OPTIONS(NSUInteger, CollisionCategory)
     self.pauseMenu = [SKShapeNode shapeNodeWithRectOfSize:CGSizeMake(self.size.width, self.size.height)];
     self.pauseMenu.strokeColor = self.pauseMenu.fillColor = [[SKColor blackColor] colorWithAlphaComponent:0.6];
     self.pauseMenu.position = CGPointMake(self.size.width/2, self.size.height/2);
-    self.pauseMenu.zPosition = 100;
+    self.pauseMenu.zPosition = 1000;
     self.pauseMenu.name = @"pauseMenu";
     
     self.continueButton = [self getLabelWithText:@"Continuar" andFontSize:26 andFontColor:[SKColor blackColor] andFont:@"" andBackgroundColor:[SKColor whiteColor] andSize:CGSizeMake(self.size.width*2/3, 40) andName:@"continueButton"];
@@ -109,32 +84,24 @@ typedef NS_OPTIONS(NSUInteger, CollisionCategory)
     return background;
 }
 
-- (void)addChampi {
+-(void)addMushroom {
     
     // Create sprite
-    SKSpriteNode *champi = [SKSpriteNode spriteNodeWithImageNamed:@"location_red"];
-    champi.name = @"champi";
-    champi.size = CGSizeMake(60, 20);
+    MushroomNode *mushroom = [[MushroomNode alloc] init];
     
     // Determine where to spawn the champi along the Y axis
-    int minX = champi.size.width / 2;
-    int maxX = self.frame.size.width - champi.size.width / 2;
+    int minX = mushroom.size.width / 2;
+    int maxX = self.frame.size.width - mushroom.size.width / 2;
     int rangeX = maxX - minX;
     int actualX = (arc4random() % rangeX) + minX;
     
-    champi.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:champi.size]; // 1
-    champi.physicsBody.dynamic = YES; // 2
-    champi.physicsBody.categoryBitMask = CollisionCategoryChampi; // 3
-    champi.physicsBody.contactTestBitMask = CollisionCategoryPlayerBread; // 4
-    champi.physicsBody.collisionBitMask = CollisionCategoryPlayerBread;
-    champi.physicsBody.affectedByGravity = YES;
-    champi.physicsBody.dynamic = YES;
-    champi.zPosition = 5;
-    
     // Create the monster slightly off-screen along the right edge,
     // and along a random position along the Y axis as calculated above
-    champi.position = CGPointMake(actualX, self.frame.size.height + champi.size.height/2);
-    [self addChild:champi];
+    mushroom.position = CGPointMake(actualX, self.frame.size.height + mushroom.size.height/2);
+    
+    [self addChild:mushroom];
+    
+    NSLog(@"Aparece champiñon");
     
     // Determine speed of the champi
     /*int minDuration = 2.0;
@@ -149,6 +116,27 @@ typedef NS_OPTIONS(NSUInteger, CollisionCategory)
     
 }
 
+- (void)addPrawn {
+    
+    // Create sprite
+    PrawnNode *prawn = [[PrawnNode alloc] init];
+    
+    // Determine where to spawn the champi along the Y axis
+    int minX = prawn.size.width / 2;
+    int maxX = self.frame.size.width - prawn.size.width / 2;
+    int rangeX = maxX - minX;
+    int actualX = (arc4random() % rangeX) + minX;
+    
+    // Create the monster slightly off-screen along the right edge,
+    // and along a random position along the Y axis as calculated above
+    prawn.position = CGPointMake(actualX, self.frame.size.height + prawn.size.height/2);
+    
+    [self addChild:prawn];
+    
+    NSLog(@"Aparece gamba");
+}
+
+
 -(void)tooglePause{
     if(self.paused){
         [self.pauseMenu removeFromParent];
@@ -160,16 +148,25 @@ typedef NS_OPTIONS(NSUInteger, CollisionCategory)
     self.paused = !self.paused;
 }
 
-- (void)updateWithTimeSinceLastUpdate:(CFTimeInterval)timeSinceLast {
+-(void)updateWithTimeSinceLastUpdate:(CFTimeInterval)timeSinceLast {
     
-    self.lastSpawnTimeInterval += timeSinceLast;
-    if (self.lastSpawnTimeInterval > 1) {
-        self.lastSpawnTimeInterval = 0;
-        [self addChampi];
+    self.lastSpawnMushroomTimeInterval += timeSinceLast;
+    if (self.lastSpawnMushroomTimeInterval > 0.6) {
+        self.lastSpawnMushroomTimeInterval = 0;
+        [self addMushroom];
+    }
+    
+    self.lastSpawnPrawnTimeInterval += timeSinceLast;
+    if (self.lastSpawnPrawnTimeInterval > 1) {
+        self.lastSpawnPrawnTimeInterval = 0;
+        [self addPrawn];
     }
 }
 
 - (void)update:(NSTimeInterval)currentTime {
+    
+    updateCalled++;
+    
     // Handle time delta.
     // If we drop below 60fps, we still want everything to move the same distance.
     CFTimeInterval timeSinceLast = currentTime - self.lastUpdateTimeInterval;
@@ -181,8 +178,16 @@ typedef NS_OPTIONS(NSUInteger, CollisionCategory)
     
     [self updateWithTimeSinceLastUpdate:timeSinceLast];
     
-    [self enumerateChildNodesWithName:@"champi" usingBlock:^(SKNode *node, BOOL *stop) {
-        if (node.position.x < 0){
+    [self enumerateChildNodesWithName:@"mushroom" usingBlock:^(SKNode *node, BOOL *stop) {
+        //Eliminamos los champis que hayan pasado
+        if (node.position.y < 0){
+            [node removeFromParent];
+        }
+    }];
+    
+    [self enumerateChildNodesWithName:@"prawn" usingBlock:^(SKNode *node, BOOL *stop) {
+        //Eliminamos las gambas que hayan pasado
+        if (node.position.y < 0){
             [node removeFromParent];
         }
     }];
@@ -193,6 +198,58 @@ typedef NS_OPTIONS(NSUInteger, CollisionCategory)
     [self createScene];
 }
 
+#pragma mark - Collision
+
+-(void)didBeginContact:(SKPhysicsContact *)contact {
+    
+    if(updateCalled != 0) {
+        updateCalled = 0;
+        
+        SKPhysicsBody *firstBody;
+        SKPhysicsBody *secondBody;
+        
+        if (contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask){
+            firstBody = contact.bodyA;
+            secondBody = contact.bodyB;
+        }
+        else{
+            firstBody = contact.bodyB;
+            secondBody = contact.bodyA;
+        }
+        
+        if([firstBody.node isKindOfClass:[MushroomNode class]]){
+            if(firstBody.node.position.x >= self.bread.position.x-(self.bread.size.width/8)
+               && firstBody.node.position.x <= self.bread.position.x+(self.bread.size.width/8)
+               && contact.contactPoint.y >= self.bread.position.y+self.bread.size.height/2){
+                
+                if(self.bread.acceptMoreMushrooms){
+                    [self.bread addMushroomCompletionBlock:^{
+                        
+                    }];
+                    
+                    [firstBody.node removeFromParent];
+                }
+                
+            }
+        }
+        else if([firstBody.node isKindOfClass:[PrawnNode class]]){
+            if(firstBody.node.position.x >= self.bread.position.x-(self.bread.size.width/6)
+               && firstBody.node.position.x <= self.bread.position.x+(self.bread.size.width/6)
+               && contact.contactPoint.y >= self.bread.position.y+self.bread.size.height/2){
+                
+                if(self.bread.acceptPrawn){
+                    [self.bread addPrawnWithCompletionBlock:^{
+                        
+                    }];
+                    
+                    [firstBody.node removeFromParent];
+                }
+            }
+        }
+
+    }
+}
+
 #pragma mark - Touch
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -201,7 +258,7 @@ typedef NS_OPTIONS(NSUInteger, CollisionCategory)
     
     SKNode *touchedNode = [self nodeAtPoint:positionInScene];
     
-    if([touchedNode isEqualToNode:self.bread]){
+    if([self.bread containsPoint:positionInScene]){
         moving = YES;
     }
     else if([touchedNode.name isEqualToString:@"pauseButton"]){
@@ -211,9 +268,7 @@ typedef NS_OPTIONS(NSUInteger, CollisionCategory)
         [self tooglePause];
     }
     else if([touchedNode.name isEqualToString:@"exitButton"]){
-        [self.controller dismissViewControllerAnimated:YES completion:^{
-            
-        }];
+        [self.controller dismissViewControllerAnimated:YES completion:^{}];
     }
 }
 
@@ -221,13 +276,18 @@ typedef NS_OPTIONS(NSUInteger, CollisionCategory)
 	UITouch *touch = [touches anyObject];
 	CGPoint positionInScene = [touch locationInNode:self];
 	CGPoint previousPosition = [touch previousLocationInNode:self];
-    SKNode *touchedNode = [self nodeAtPoint:positionInScene];
+    //SKNode *touchedNode = [self nodeAtPoint:positionInScene];
 
-    if([touchedNode isEqualToNode:self.bread]){
+    //if([touchedNode isEqualToNode:self.bread]){
+    if(moving){
         CGPoint translation = CGPointMake(positionInScene.x - previousPosition.x, positionInScene.y - previousPosition.y);
         
         [self panForTranslation:translation];
     }
+}
+
+-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    moving = NO;
 }
 
 - (void)panForTranslation:(CGPoint)translation {
@@ -248,6 +308,5 @@ typedef NS_OPTIONS(NSUInteger, CollisionCategory)
     
     [self.bread setPosition:CGPointMake(futureX, position.y)];
 }
-
 
 @end
